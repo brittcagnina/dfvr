@@ -6,7 +6,7 @@
 #include "WorldCube.generated.h"
 
 UCLASS()
-class DEX_API AWorldCube : public AActor
+class DEX_API AWorldCube : public AStaticMeshActor
 {
 	GENERATED_BODY()
 
@@ -25,13 +25,10 @@ public:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
 
 	void UpdateMesh(int);
 
-	const static int32 CubeScale = 200;
+	const static int32 CubeScale = 20;
 	const static int32 GRASS = 0;
 	const static int32 GOLD = 1;
 	const static int32 GLASS = 2;

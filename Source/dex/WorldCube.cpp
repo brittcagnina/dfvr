@@ -34,12 +34,6 @@ void AWorldCube::BeginPlay()
 
 }
 
-// Called every frame
-void AWorldCube::Tick( float DeltaTime )
-{
-	Super::Tick( DeltaTime );
-}
-
 void AWorldCube::UpdateMesh(int Type) {
 	if (Type == AWorldCube::GOLD) {
 		//this->MyBlock->SetMaterial(0, LoadObject<UMaterialInterface>(NULL, TEXT("/Game/StarterContent/Materials/M_Water_Ocean")));

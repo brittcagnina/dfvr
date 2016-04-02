@@ -54,6 +54,7 @@ void AMyCharacter::BeginPlay()
 		this->PrevLoadPos = CharPosition;
 		CharPosition = GenWorld.FindNearbyBelowCube(CharPosition);
 
+		/*
 		WorldSingleton* Singleton = WorldSingleton::Instance();
 		int32 x, y, z;
 		for (x = -GenerateWorld::WorldXSize; x < GenerateWorld::WorldXSize; x++) {
@@ -81,12 +82,15 @@ void AMyCharacter::BeginPlay()
 				}
 			}
 		}
+		*/
 	}
 }
 
 // Called every frame
 void AMyCharacter::Tick(float DeltaTime)
 {
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::SanitizeFloat(DeltaTime));
 	Super::Tick(DeltaTime);
 	this->FrameCount += DeltaTime;
 	if (this->FrameCount > .1) {

@@ -18,7 +18,7 @@ public:
 	static FVector FindNearbyAheadCube(FVector);
 	static FVector FindNearbyAheadFloorCube(FVector);
 
-	const static int32 WorldXSize = 20;
-	const static int32 WorldYSize = 20;
-	const static int32 WorldZSize = 5;
+	const static int32 WorldXSize = 40;
+	const static int32 WorldYSize = 40;
+	const static int32 WorldZSize = 3;
 };

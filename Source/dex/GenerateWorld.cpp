@@ -5,6 +5,7 @@
 #include "WorldCube.h"
 #include "WorldSingleton.h"
 #include "FileHandler.h"
+#include "PerlinNoise.h"
 
 GenerateWorld::GenerateWorld()
 {
@@ -16,8 +17,51 @@ GenerateWorld::~GenerateWorld()
 
 void GenerateWorld::CreateMinimalLandscape(UWorld** World) {
 	int32 x, y, z;
+	//PerlinNoise Noise(double _persistence, double _frequency, double _amplitude, int _octaves, int _randomseed);
+	int32 MaxHeight = 3;
+	PerlinNoise Noise(1, .06, MaxHeight, 1, 42);
 	for (x = -GenerateWorld::WorldXSize; x < GenerateWorld::WorldXSize; x++) {
 		for (y = -GenerateWorld::WorldYSize; y < GenerateWorld::WorldYSize; y++) {
+
+			double Height = Noise.GetHeight(x, y);
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("BEFORE X=%d Y=%d Z="), x, y) +  FString::SanitizeFloat(Height));
+
+			if (Height < 0) {
+				Height = FMath::Ceil(Height);
+			} else {
+				Height = FMath::Floor(Height);
+			}
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("AFTER X=%d Y=%d Z="), x, y) + FString::FromInt(Height));
+
+			for (z = -(MaxHeight + 1); z <= Height; z++) {
+				if (*World) {
+
+					const FVector CubeLocation = FVector(
+						x * AWorldCube::CubeScale,
+						y * AWorldCube::CubeScale,
+						z * AWorldCube::CubeScale
+						);
+
+					const FRotator CubeRotation = FRotator::ZeroRotator;
+					if (z == 0) {
+						this->AddCube(&(*World), CubeLocation, CubeRotation, AWorldCube::GRASS);
+					}
+					else {
+						this->AddCube(&(*World), CubeLocation, CubeRotation, AWorldCube::GRASS);
+					}
+
+					/*
+					FBufferArchive ToBinary;
+					FileHandler::PushCubeDataToBuffer(&ToBinary, AWorldCube::GRASS, CubeLocation);
+					FString Path = "C:\\ProgramData\\MyCubes\\CUBE " + CubeLocation.ToString() + ".bin";
+					FileHandler::SaveDataToFile(Path, &ToBinary);
+					*/
+				}
+			}
+
+			/*
 			for (z = -(GenerateWorld::WorldZSize - 1 ); z <= 0; z++) {
 				if (*World) {
 
@@ -40,6 +84,8 @@ void GenerateWorld::CreateMinimalLandscape(UWorld** World) {
 					FileHandler::SaveDataToFile(Path, &ToBinary);
 				}
 			}
+			*/
+
 		}
 	}
 }
@@ -47,6 +93,7 @@ void GenerateWorld::CreateMinimalLandscape(UWorld** World) {
 void GenerateWorld::AddCube(UWorld** world, const FVector location, const FRotator rotation, int Type) {
 	if (world) {
 		AActor* CubeActor = (*world)->SpawnActor<AWorldCube>(AWorldCube::StaticClass(), location, rotation);
+		//CubeActor->DisableComponentsSimulatePhysics();
 		AWorldCube* Cube = Cast<AWorldCube>(CubeActor);
 
 		if (Type != AWorldCube::GRASS) {
